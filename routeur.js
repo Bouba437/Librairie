@@ -1,13 +1,22 @@
 var express = require("express");
 var routeur = express.Router();
 const twig = require("twig");
+const livreModel = require("./models/livres.modele");
 
 routeur.get('/', (requete, reponse) => {
     reponse.render("accueil.html.twig");
 })
 
 routeur.get('/livres', (requete, reponse) => {
-    reponse.render("livres/liste.html.twig");
+    //Afficher le livre
+    livreModel.find()
+            .exec()
+            .then(livres => {
+                reponse.render("livres/liste.html.twig", {livres: livres});
+            })
+            .catch(error => {
+                console.log(error);
+            });
 })
 
 routeur.get("/livres/:nom", (requete, reponse) => {

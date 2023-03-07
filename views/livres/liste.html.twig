@@ -14,6 +14,15 @@
         </thead>
         <tbody>
             <tr>
+            {% for livre in livres %}
+                <td><a href="/livres/{{livre._id}}">{{ livre.nom }}</a></td>
+                <td>{{ livre.auteur }}</td>
+                <td>{{ livre.pages }}</td>
+                <td><a href="" class="btn btn-warning">Modifier</a></td>
+                <td><a href="" class="btn btn-danger">Supprimer</a></td>
+            {% endfor %}
+            </tr>
+            {# <tr>
                 <td><a href="/livres/Les méthodes en sociologie">Les méthodes en sociologie</a></td>
                 <td>Raymond Boudon</td>
                 <td>200</td>
@@ -40,7 +49,7 @@
                 <td>280</td>
                 <td><button class="btn btn-warning">Modifier</button></td>
                 <td><button class="btn btn-danger">Supprimer</button></td>
-            </tr>
+            </tr> #}
         </tbody>
     </table>
     <a href="" class="btn btn-success d-block">Ajouter</a>
