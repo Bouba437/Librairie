@@ -19,9 +19,15 @@ routeur.get('/livres', (requete, reponse) => {
             });
 })
 
-routeur.get("/livres/:nom", (requete, reponse) => {
-    console.log(requete.params.nom);
-    reponse.render("livres/livre.html.twig", {nom: requete.params.nom});
+routeur.get("/livres/:id", (requete, reponse) => {
+    livreModel.findById(requete.params.id)
+            .exec()
+            .then(livre => {
+                reponse.render("livres/livre.html.twig", {livre: livre});
+            })
+            .catch(error => {
+                console.log(error);
+            })
 })
 
 //Gère l'erreur 404
