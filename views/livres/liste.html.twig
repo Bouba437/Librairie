@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block titre %}Liste des livres de la bibliothèque{% endblock %}
+
+{% block contenu %}
+    <table class="table table-hover text-center">
+        <thead>
+            <tr class="table-dark">
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Nombre de pages</th>
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="/livres/Les méthodes en sociologie">Les méthodes en sociologie</a></td>
+                <td>Raymond Boudon</td>
+                <td>200</td>
+                <td><button class="btn btn-warning">Modifier</button></td>
+                <td><button class="btn btn-danger">Supprimer</button></td>
+            </tr>
+            <tr>
+                <td><a href="/livres/Une vie">Une vie</a></td>
+                <td>Tansi</td>
+                <td>230</td>
+                <td><button class="btn btn-warning">Modifier</button></td>
+                <td><button class="btn btn-danger">Supprimer</button></td>
+            </tr>
+            <tr>
+                <td><a href="/livres/La chute">La chute</a></td>
+                <td>Camus</td>
+                <td>150</td>
+                <td><button class="btn btn-warning">Modifier</button></td>
+                <td><button class="btn btn-danger">Supprimer</button></td>
+            </tr>
+            <tr>
+                <td><a href="/livres/Candide">Candide</a></td>
+                <td>Voltaire</td>
+                <td>280</td>
+                <td><button class="btn btn-warning">Modifier</button></td>
+                <td><button class="btn btn-danger">Supprimer</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="" class="btn btn-success d-block">Ajouter</a>
+{% endblock %}
