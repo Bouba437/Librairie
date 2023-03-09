@@ -13,44 +13,43 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
             {% for livre in livres %}
-                <td><a href="/livres/{{livre._id}}">{{ livre.nom }}</a></td>
-                <td>{{ livre.auteur }}</td>
-                <td>{{ livre.pages }}</td>
-                <td><a href="" class="btn btn-warning">Modifier</a></td>
-                <td><a href="" class="btn btn-danger">Supprimer</a></td>
+                <tr>
+                    <td><a href="/livres/{{livre._id}}">{{ livre.nom }}</a></td>
+                    <td>{{ livre.auteur }}</td>
+                    <td>{{ livre.pages }}</td>
+                    <td><a href="" class="btn btn-warning">Modifier</a></td>
+                    <td>
+                        <form action="/livres/delete/{{livre._id}}" method="post" onSubmit="return confirm('Voulez-vous vraiment supprimer {{livre.nom}} ?');">
+                            <button class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
             {% endfor %}
-            </tr>
-            {# <tr>
-                <td><a href="/livres/Les méthodes en sociologie">Les méthodes en sociologie</a></td>
-                <td>Raymond Boudon</td>
-                <td>200</td>
-                <td><button class="btn btn-warning">Modifier</button></td>
-                <td><button class="btn btn-danger">Supprimer</button></td>
-            </tr>
-            <tr>
-                <td><a href="/livres/Une vie">Une vie</a></td>
-                <td>Tansi</td>
-                <td>230</td>
-                <td><button class="btn btn-warning">Modifier</button></td>
-                <td><button class="btn btn-danger">Supprimer</button></td>
-            </tr>
-            <tr>
-                <td><a href="/livres/La chute">La chute</a></td>
-                <td>Camus</td>
-                <td>150</td>
-                <td><button class="btn btn-warning">Modifier</button></td>
-                <td><button class="btn btn-danger">Supprimer</button></td>
-            </tr>
-            <tr>
-                <td><a href="/livres/Candide">Candide</a></td>
-                <td>Voltaire</td>
-                <td>280</td>
-                <td><button class="btn btn-warning">Modifier</button></td>
-                <td><button class="btn btn-danger">Supprimer</button></td>
-            </tr> #}
         </tbody>
     </table>
-    <a href="" class="btn btn-success d-block">Ajouter</a>
+    <button onclick="afficherFormulaire()" class="btn btn-success w-100">Ajouter</button>
+    
+    <form id="ajoutForm" class="d-none" method="POST" action="">
+        <fieldset>
+            <legend>Création d'un livre</legend>
+            <div class="mb-3">
+                <label for="titre">Titre du livre</label>
+                <input type="text" class="form-control" id="titre" name="titre">
+            </div>
+            <div class="mb-3">
+                <label for="auteur">Auteur</label>
+                <input type="text" class="form-control" id="auteur" name="auteur">
+            </div>
+            <div class="mb-3">
+                <label for="pages">Nombre de pages</label>
+                <input type="number" class="form-control" id="pages" name="pages">
+            </div>
+            <div class="mb-3">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" row="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Valider</button>
+        </fieldset>
+    </form>
 {% endblock %}

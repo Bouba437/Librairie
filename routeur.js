@@ -1,4 +1,5 @@
 var express = require("express");
+const mongoose = require("mongoose");
 var routeur = express.Router();
 const twig = require("twig");
 const livreModel = require("./models/livres.modele");
@@ -17,6 +18,40 @@ routeur.get('/livres', (requete, reponse) => {
             .catch(error => {
                 console.log(error);
             });
+})
+
+routeur.post("/livres", (requete, reponse) => {
+    const {titre, auteur, pages, description} = requete.body; //Destructuration
+    const livre = new livreModel({
+        _id: new mongoose.Types.ObjectId(),
+        // nom: requete.body.titre,
+        // auteur: requete.body.auteur,
+        // pages: requete.body.pages,
+        // description: requete.body.description,
+        nom: titre,
+        auteur: auteur,
+        pages: pages,
+        description: description,
+    });
+    livre.save()
+        .then(resultat => {
+            console.log(resultat);
+            reponse.redirect("/livres");
+        })
+        .catch(error => {
+            console.log(error);
+        })
+})
+
+routeur.post("/livres/delete/:id", (requete, reponse) => {
+    livreModel.deleteOne({_id: requete.params.id})
+            .exec()
+            .then(resultat => {
+                reponse.redirect('/livres');
+            })
+            .catch(error => {
+                console.log(error);
+            })
 })
 
 routeur.get("/livres/:id", (requete, reponse) => {
