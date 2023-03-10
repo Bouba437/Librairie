@@ -3,18 +3,49 @@
 {% block titre %}{{ livre.nom }}{% endblock %}
 
 {% block contenu %}
-    <div class="row m-2">
-        <div class="col-6">
-            <h2>Informations : </h2>
-            <div>Auteur : {{ livre.auteur }}</div>
-            <div>Nombre de pages : {{ livre.pages }}</div>
-            <img src="https://picsum.photos/200/200">
-        </div>
-        <div class="col-6">
-            <h2>Résumé : </h2>
-            <div>
-                {{ livre.description }}
+    {% if isModification %}
+        <form action="/livres/modificationServer" method="POST">
+            <div class="row m-2">
+                <div class="col-6">
+                    <h2>Informations : </h2>
+                    <div class="mb-3">
+                        <label for="titre">Titre du livre</label>
+                        <input type="text" class="form-control" id="titre" name="titre" value="{{ livre.nom }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="auteur">Auteur</label>
+                        <input type="text" class="form-control" id="auteur" name="auteur" value="{{ livre.auteur }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pages">Nombre de pages</label>
+                        <input type="number" class="form-control" id="pages" name="pages" value="{{ livre.pages }}">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <h2>Résumé : </h2>
+                    <div class="mb-3">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" row="5">{{ livre.description }}</textarea>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="identifiant" value="{{ livre._id }}">
+            <input type="submit" class="btn btn-primary w-100" value="Valider les modifications">
+        </form>
+    {% else %}  
+        <div class="row m-2">
+            <div class="col-6">
+                <h2>Informations : </h2>
+                <div>Auteur : {{ livre.auteur }}</div>
+                <div>Nombre de pages : {{ livre.pages }}</div>
+                <img src="https://picsum.photos/200/200">
+            </div>
+            <div class="col-6">
+                <h2>Résumé : </h2>
+                <div>
+                    {{ livre.description }}
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}

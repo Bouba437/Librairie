@@ -3,6 +3,11 @@
 {% block titre %}Liste des livres de la bibliothèque{% endblock %}
 
 {% block contenu %}
+    {% if message | length > 0 %}
+        <div class="alert alert-{{message.type}}" role="alert">
+            {{ message.contenu }}
+        </div>
+    {% endif %}
     <table class="table table-hover text-center">
         <thead>
             <tr class="table-dark">
@@ -18,7 +23,8 @@
                     <td><a href="/livres/{{livre._id}}">{{ livre.nom }}</a></td>
                     <td>{{ livre.auteur }}</td>
                     <td>{{ livre.pages }}</td>
-                    <td><a href="" class="btn btn-warning">Modifier</a></td>
+                    <td>
+                        <a href="/livres/modification/{{livre._id}}" class="btn btn-warning">Modifier</a></td>
                     <td>
                         <form action="/livres/delete/{{livre._id}}" method="post" onSubmit="return confirm('Voulez-vous vraiment supprimer {{livre.nom}} ?');">
                             <button class="btn btn-danger">Supprimer</button>

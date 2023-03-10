@@ -13,7 +13,7 @@ routeur.get('/livres', (requete, reponse) => {
     livreModel.find()
             .exec()
             .then(livres => {
-                reponse.render("livres/liste.html.twig", {livres: livres});
+                reponse.render("livres/liste.html.twig", {livres: livres, message: reponse.locals.message});
             })
             .catch(error => {
                 console.log(error);
@@ -43,22 +43,70 @@ routeur.post("/livres", (requete, reponse) => {
         })
 })
 
-routeur.post("/livres/delete/:id", (requete, reponse) => {
-    livreModel.deleteOne({_id: requete.params.id})
+//Afficher un livre
+routeur.get("/livres/:id", (requete, reponse) => {
+    livreModel.findById(requete.params.id)
             .exec()
-            .then(resultat => {
-                reponse.redirect('/livres');
+            .then(livre => {
+                reponse.render("livres/livre.html.twig", {livre: livre, isModification: false});
             })
             .catch(error => {
                 console.log(error);
             })
 })
 
-routeur.get("/livres/:id", (requete, reponse) => {
+//Accéder u formulaire de modification
+routeur.get("/livres/modification/:id", (requete, reponse) => {
     livreModel.findById(requete.params.id)
             .exec()
             .then(livre => {
-                reponse.render("livres/livre.html.twig", {livre: livre});
+                reponse.render("livres/livre.html.twig", {livre: livre, isModification: true});
+            })
+            .catch(error => {
+                console.log(error);
+            })
+})
+
+//Modification livre
+routeur.post("/livres/modificationServer", (requete, reponse) => {
+    const {titre, auteur, pages, description} = requete.body;
+    const livreUpdate = {
+        nom: titre,
+        auteur: auteur,
+        pages: pages,
+        description: description,
+    }
+    livreModel.updateOne({_id: requete.body.identifiant}, livreUpdate)
+            .exec()
+            .then(resultat => {
+                // console.log(resultat);
+                if(resultat.modifiedCount < 1) throw new Error("La demande de modification a échoué")
+                requete.session.message = {
+                    type: 'success',
+                    contenu: `Les modifications ont été prises en compte`,
+                }
+                reponse.redirect("/livres")
+            })
+            .catch(error => {
+                requete.session.message = {
+                    type: 'danger',
+                    contenu: error.message,
+                }
+                reponse.redirect("/livres")
+            })
+})
+
+//Spprimer un livre
+routeur.post("/livres/delete/:id", (requete, reponse) => {
+    const id_livre = requete.params.id; // Récupérer l'ID du livre à supprimer
+    livreModel.deleteOne({_id: requete.params.id})
+            .exec()
+            .then(resultat => {
+                requete.session.message = {
+                    type: 'success',
+                    contenu: `Suppression effectuée pour le livre avec l'ID ${id_livre}`,
+                }
+                reponse.redirect('/livres');
             })
             .catch(error => {
                 console.log(error);
