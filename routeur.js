@@ -1,8 +1,37 @@
 var express = require("express");
 const mongoose = require("mongoose");
+const multer = require("multer");
 var routeur = express.Router();
 const twig = require("twig");
 const livreModel = require("./models/livres.modele");
+
+const storage = multer.diskStorage({
+    destination: (requete, file, cb) => {
+        cb(null, "./public/images/")
+    },
+    filename: (requete, file, cb) => {
+        let date = new Date().toLocaleDateString().replace(/\//g, '-');
+        cb(null, date + "-" + Math.round(Math.random() * 10000) + "-" + file.originalname)
+    }
+});
+
+const fileFilter = (requete, file, cb) => {
+    // Autoriser uniquement les fichiers jpeg, png et gif
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/gif') {
+      cb(null, true)
+    } else {
+      cb(new Error('Le type de fichier est invalide. Seuls les fichiers jpeg, png et gif sont autorisés.'), false);
+    }
+}
+
+//Parametrer multer(image)
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter,
+})
 
 routeur.get('/', (requete, reponse) => {
     reponse.render("accueil.html.twig");
@@ -20,7 +49,8 @@ routeur.get('/livres', (requete, reponse) => {
             });
 })
 
-routeur.post("/livres", (requete, reponse) => {
+//Creation de livre
+routeur.post("/livres", upload.single("image"), (requete, reponse) => {
     const {titre, auteur, pages, description} = requete.body; //Destructuration
     const livre = new livreModel({
         _id: new mongoose.Types.ObjectId(),
@@ -32,6 +62,7 @@ routeur.post("/livres", (requete, reponse) => {
         auteur: auteur,
         pages: pages,
         description: description,
+        image: requete.file.path.substring(14),
     });
     livre.save()
         .then(resultat => {

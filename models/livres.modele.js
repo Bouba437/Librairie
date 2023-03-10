@@ -7,6 +7,7 @@ const livreSchema = mongoose.Schema({
     auteur: String,
     pages: Number,
     description: String,
+    image: String,
 })
 
 //Association avec la base de données (Model) et l'exportation

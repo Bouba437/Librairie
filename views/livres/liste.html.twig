@@ -36,7 +36,7 @@
     </table>
     <button onclick="afficherFormulaire()" class="btn btn-success w-100">Ajouter</button>
     
-    <form id="ajoutForm" class="d-none" method="POST" action="">
+    <form id="ajoutForm" class="d-none" method="POST" action="" enctype="multipart/form-data">
         <fieldset>
             <legend>Création d'un livre</legend>
             <div class="mb-3">
@@ -54,6 +54,10 @@
             <div class="mb-3">
                 <label for="description">Description</label>
                 <textarea class="form-control" id="description" name="description" row="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="image">Image</label>
+                <input type="file" class="form-control" name="image" id="image">
             </div>
             <button type="submit" class="btn btn-primary">Valider</button>
         </fieldset>

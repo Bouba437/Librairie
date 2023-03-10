@@ -5,6 +5,8 @@ const router = require("./routeur");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const session = require("express-session");
+
+//Parametrer les sessions
 server.use(session({
     secret: 'keyboard cat',
     resave: true,
