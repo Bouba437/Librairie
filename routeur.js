@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 var routeur = express.Router();
 const twig = require("twig");
+const fs = require("fs");
 const livreModel = require("./models/livres.modele");
+const { exec } = require("child_process");
 
 const storage = multer.diskStorage({
     destination: (requete, file, cb) => {
@@ -127,21 +129,84 @@ routeur.post("/livres/modificationServer", (requete, reponse) => {
             })
 })
 
+//p
+routeur.post("/livres/updateImage", upload.single("image"), (requete, reponse) => {
+    var livre = livreModel.findById(requete.body.identifiant)
+    .select("image")
+    .exec()
+    .then(livre => {
+        fs.unlink("./public/images/"+livre.image, error => {
+            console.log(error);
+        })
+        const livreUpdate = {
+            image : requete.file.path.substring(14)
+        }
+        livreModel.updateOne({_id:requete.body.identifiant}, livreUpdate)
+        .exec()
+        .then(resultat => {
+            reponse.redirect("/livres/modification/"+requete.body.identifiant)
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    });
+   
+})
+
+//Modification image (m)
+// routeur("/livres/updateImage", upload.single("image"), (requete, reponse) => {
+//     var livre = livreModel.findById(requete.body.identifiant)
+//         //Suppression de l'image
+//         .select("image")
+//         .exec()
+//         .then(livre => {
+//             fs.unlink("./public/images/"+ livre.image, error => {
+//                 console.log(error);
+//             }) 
+//             const livreUpdate = {
+//                 image: requete.file.path.substring(14)
+//             }
+//             livreModel.updateOne({_id: requete.body.identifiant}, livreUpdate)
+//                 .exec()
+//                 .then(resultat => {
+//                     reponse.redirect("/livres/modification/"+requete.body.identifiant)
+//                 })
+//                 .catch(error => {
+//                     console.log(error);
+//                 })
+//         });
+// })
+
+
 //Spprimer un livre
 routeur.post("/livres/delete/:id", (requete, reponse) => {
     const id_livre = requete.params.id; // Récupérer l'ID du livre à supprimer
-    livreModel.deleteOne({_id: requete.params.id})
-            .exec()
-            .then(resultat => {
-                requete.session.message = {
-                    type: 'success',
-                    contenu: `Suppression effectuée pour le livre avec l'ID ${id_livre}`,
-                }
-                reponse.redirect('/livres');
-            })
-            .catch(error => {
-                console.log(error);
-            })
+    let livre = livreModel.findById(requete.params.id)
+                    //Suppression de l'image
+                    .select("image")
+                    .exec()
+                    .then(livre => {
+                        fs.unlink("./public/images/"+ livre.image, error => {
+                            console.log(error);
+                        })
+                        //Suppression du livre
+                        livreModel.deleteOne({_id: requete.params.id})
+                            .exec()
+                            .then(resultat => {
+                                requete.session.message = {
+                                    type: 'success',
+                                    contenu: `Suppression effectuée pour le livre avec l'ID ${id_livre}`,
+                                }
+                                reponse.redirect('/livres');
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            })
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+    
 })
 
 //Gère l'erreur 404
